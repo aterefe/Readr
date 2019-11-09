@@ -4,90 +4,117 @@
  * choices above. The user should not see a book they have already said yes or no to.
  */
 import React from 'react';
-import { Typography } from '@material-ui/core';
+import axios from 'axios';
+import { Typography, CircularProgress } from '@material-ui/core';
 import SuggestionButtons from './SuggestionButtons.jsx';
-import testBook from './TestBook';
-
 
 class SuggestionView extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      // this inherits the first book suggestion from the first app load and gets reset with each click
-      bookSuggestion: testBook,
+      // this inherits the first book suggestion from the first app load, reset with each click
+      bookSuggestion: null,
+      // ---FORMAT IS THIS
+      /* author: "Susan Wiggs"
+       * coverURL: "http...."
+       * description: "Book 1 of .."
+       * isbn: "9781459247925"
+       * title: "THE CHARM SCHOOL"
+       */
     };
+
+    this.getBookSuggestion = this.getBookSuggestion.bind(this);
+    this.postUserInterest = this.postUserInterest.bind(this);
     this.handleYesClick = this.handleYesClick.bind(this);
     this.handleNoClick = this.handleNoClick.bind(this);
     this.handleReadNowClick = this.handleReadNowClick.bind(this);
   }
 
-  getBookSuggestion() {
-    // return axios.get('/book').then((retrievedBook) => {
-    //   return retrievedBook;
-    // });
-
-    const { bookSuggestion } = this.state;
-    return bookSuggestion;
+  componentDidMount() {
+    this.getBookSuggestion();
   }
 
-  // allows more DRY code by not having this repeat inside the handleClicks
-  newBookSuggestion() {
-    this.getBookSuggestion();
-    // .then((book) => {
-    //   this.setState({ bookSuggestion: book });
-    // });
+  // Request to server to get a new book suggestion
+  getBookSuggestion() {
+    return axios.get('/readr/suggestion').then((retrievedBook) => {
+      this.setState({ bookSuggestion: retrievedBook.data });
+    });
+  }
+
+  // Sends post reqest to server to update the users interest in book suggestion
+  postUserInterest(isInterested) {
+    const { bookSuggestion } = this.state;
+    const { user } = this.props;
+    return axios.post('/readr/interest', {
+      userID: user.id,
+      isbn: bookSuggestion.isbn,
+      // this is true or false value, passed in on click
+      toRead: isInterested,
+    });
   }
 
   /* Adds book to the logged in users "not interested" list by
-  * sending a update request to the database.
+  * sending a update user interest request to the database.
   * Show the next book suggestion.
   */
   handleNoClick() {
-    console.log('Clicked No');
-    this.newBookSuggestion();
+    this.postUserInterest(false);
+    this.getBookSuggestion();
   }
 
   /* Adds book to the logged in users "to-read" list by
-  * sending a update request to the database.
+  * sending a update user interest request to the database.
   * Show the next book suggestion.
   */
   handleYesClick() {
-    console.log('Clicked Yes');
-    this.newBookSuggestion();
+    this.postUserInterest(true);
+    this.getBookSuggestion();
   }
 
   handleReadNowClick() {
     console.log('Clicked Read Now!');
+    // sends users to a view or link to openURL
+    // *************************** FIX ME
   }
 
   render() {
     const { bookSuggestion } = this.state;
     return (
       <div>
-        <div style={{
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-        }}
-        >
-          <img src={bookSuggestion.volumeInfo.imageLinks.thumbnail} alt="Smiley face" />
-        </div>
-        <Typography variant="h6">
-          {bookSuggestion.volumeInfo.title}: {bookSuggestion.volumeInfo.subtitle || null}
-        </Typography>
-        <Typography variant="subtitle1">{bookSuggestion.volumeInfo.authors || null} </Typography>
-        <Typography variant="caption">
-          {/* some books do not have descriptons so we'll use text snippet */}
-          {bookSuggestion.volumeInfo.description || bookSuggestion.searchInfo.textSnippet || null}
-        </Typography>
-        <br />
-        <div>
-          <SuggestionButtons
-            handleNoClick={this.handleNoClick}
-            handleYesClick={this.handleYesClick}
-            handleReadNowClick={this.handleReadNowClick}
-          />
-        </div>
+        {bookSuggestion === null ? (
+          <div
+            style={{
+              position: 'absolute',
+              left: '50%',
+              top: '40%',
+              transform: 'translate(-50%, -40%)',
+            }}
+          >
+            <CircularProgress />
+          </div>
+        ) : (
+          <div>
+            <div style={{
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}
+            >
+              <img src={bookSuggestion.coverURL} alt="Smiley face" />
+            </div>
+            <Typography variant="h6">{bookSuggestion.title}</Typography>
+            <Typography variant="subtitle1">{bookSuggestion.author || null} </Typography>
+            <Typography variant="caption">{bookSuggestion.description}</Typography>
+            <br />
+            <div>
+              <SuggestionButtons
+                handleNoClick={this.handleNoClick}
+                handleYesClick={this.handleYesClick}
+                handleReadNowClick={this.handleReadNowClick}
+              />
+            </div>
+          </div>
+        )}
       </div>
     );
   }

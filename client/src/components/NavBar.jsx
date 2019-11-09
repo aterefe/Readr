@@ -3,11 +3,12 @@
  * 3. "Explore Books" (new book suggestion), 4. Logout button.
  */
 import React from 'react';
-import AppBar from '@material-ui/core/AppBar';
-import TypoGraphy from '@material-ui/core/Typography';
-import Toolbar from '@material-ui/core/Toolbar';
-import { makeStyles } from '@material-ui/core/styles';
-// import Link from '@material-ui/core/Link';
+import {
+  AppBar,
+  Typography,
+  Toolbar,
+  makeStyles,
+} from '@material-ui/core';
 import { Link } from 'react-router-dom';
 
 // This allows custom styling of the links, over-riding the root theme
@@ -26,10 +27,10 @@ const NavBar = (props) => {
     <div>
       <AppBar color="primary" position="static">
         <Toolbar>
-          <TypoGraphy variant="h6" style={{ flex: 1 }}>
-            Welcome <TypoGraphy variant="subtitle1">{firstName}</TypoGraphy>
-          </TypoGraphy>
-          <TypoGraphy>
+          <Typography variant="button" style={{ flex: 1 }}>
+            Welcome {firstName}!
+          </Typography>
+          <Typography>
             <Link to="/suggestion" className={classes.link}>
               Explore Books
             </Link>
@@ -41,7 +42,7 @@ const NavBar = (props) => {
             </Link>
             {/* This directs to passport auth logout */}
             <a href="/auth/logout" className={classes.link}>Logout</a>
-          </TypoGraphy>
+          </Typography>
         </Toolbar>
       </AppBar>
     </div>

@@ -1,12 +1,10 @@
 import React from 'react';
 import axios from 'axios';
-import Container from '@material-ui/core/Container';
-import { BrowserRouter, Router, Route, Switch } from 'react-router-dom';
-import TypoGraphy from '@material-ui/core/Typography';
+import { Container, Typography } from '@material-ui/core';
+import { Route, Switch } from 'react-router-dom';
 import Login from './Login.jsx';
 import NavBar from './NavBar.jsx';
 import SuggestionView from './SuggestionView.jsx';
-import testBook from './TestBook';
 import BookListView from './BookListView.jsx';
 import ReaderView from './ReaderView.jsx';
 import Following from './FollowingView.jsx';
@@ -14,14 +12,12 @@ import Landing from './Landing.jsx';
 
 
 class App extends React.Component {
-  // --------handles what happens after the user clicks Login
-
   constructor(props) {
     super(props);
     this.state = {
       isLoggedIn: false,
-      bookSuggestion: testBook,
       user: null,
+      userBookList: null,
     };
   }
 
@@ -51,17 +47,18 @@ class App extends React.Component {
   }
 
   render() {
-    const { bookSuggestion } = this.state;
-    const { isLoggedIn } = this.state;
-    const { user } = this.state;
+    const { isLoggedIn, user, userBookList } = this.state;
+    // const { getBookSuggestion } = this.props;
     return (
       <div className="App">
         {/* this container centers content on the page. Width is inherited by the rest of app. */}
         <Container component="main" maxWidth="sm">
-          <TypoGraphy variant="h2"> Readr </TypoGraphy>
+          <br />
+          <Typography variant="h2" align="center"> Readr </Typography>
+          <br />
+          <br />
           <div>
-            {isLoggedIn === false ? (
-              <Login />) : null }
+            {isLoggedIn === false ? (<Login />) : null }
           </div>
           {/* conditional rendering of the components based on if the user is logged in */}
           {isLoggedIn ? (
@@ -73,15 +70,18 @@ class App extends React.Component {
               <Switch>
                 {/* // this is our default route */}
                 <Route exact path="/" component={Landing} />
-                <Route exact path="/suggestion" component={SuggestionView} />
+                <Route
+                  exact
+                  path="/suggestion"
+                  render={(props) => (
+                    <SuggestionView {...props} user={user} />)}
+                />
                 <Route exact path="/following" component={Following} />
-                <Route exact path="/toread" component={BookListView} />
+                {/* HOW TO PASS PROPS IN REACT ROUTE v4. ESLINT DISLIKES IT */}
+                <Route exact path="/toread" render={(props) => <BookListView {...props} userBookList={userBookList} />} />
                 <Route exact path="/readnow" component={ReaderView} />
                 {/* // if noroute exists */}
               </Switch>
-              {/* <SuggestionView
-                getBookSuggestion={this.getBookSuggestion}
-                bookSuggestion={bookSuggestion} */}
             </div>
           ) : null }
         </Container>

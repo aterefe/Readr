@@ -51,4 +51,21 @@ router.get('/suggestion', (req, res) => {
     .then(() => res.send(JSON.stringify(book)));
 });
 
+router.post('/interest', (req, res) => {
+  console.log(req);
+  res.send('book added to user list');
+});
+
+router.get('/booklist', (req, res) => {
+  console.log(req);
+  // const { userID, toRead } = req;
+  // get the userId and toRead
+  // make call to server
+  // return the data
+  // userBookList(userId, toRead)
+  //  .then((bookList) =>
+  //  console.log(bookList);
+  //  res.send(JSON.stringify(bookList))
+  res.send({ bookTitle: "Charolet's Web" });
+});
 module.exports = router;

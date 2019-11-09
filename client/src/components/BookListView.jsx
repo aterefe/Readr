@@ -5,8 +5,10 @@
 import React from 'react';
 
 
-function BookListView() {
+function BookListView(props) {
+  const { userBookList } = props;
   return (
+    // map over the userbooklist and render each an bookListItem
     <div>BOOK LIST VIEW</div>
   );
 }
