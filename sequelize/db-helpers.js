@@ -31,10 +31,32 @@ const createPreferences = (userID) => models.UserPreference.create({
 });
 
 // Takes a userID, the subject of the book, and the toRead boolean and updates the preferences
-const updatePreferences = (userID, subject, toRead) => {
-  // Update the user preferences where userID matches and modify subject based on math
-  // (toRead is boolean of which list for positive or negative change)
-};
+const defaultUpdate = 0.2;
+// Update the user preferences where userID matches and modify subject based on math
+// (toRead is boolean of which list for positive or negative change)
+const updatePreferences = (userID, subject, toRead) => models.UserPreference.findOne({
+  attributes: [subject],
+  where: {
+    userID,
+  },
+})
+  .then((subjectWeight) => {
+    let newWeight;
+    if (toRead) {
+      newWeight = subjectWeight.dataValues[subject] + defaultUpdate;
+    } else if (subjectWeight.dataValues[subject] <= 0.2) {
+      newWeight = subjectWeight.dataValues[subject];
+    } else {
+      newWeight = subjectWeight.dataValues[subject] - defaultUpdate;
+    }
+    return models.UserPreference.update({
+      [subject]: newWeight,
+    }, {
+      where: {
+        userID,
+      },
+    });
+  });
 
 // Takes a userID and returns the user preferences
 const getPreferences = (userID) => models.UserPreference.findOne({
@@ -100,14 +122,11 @@ const getFollowing = (userID) => models.UserFollower.findAll({
     (connectionInfo) => connectionInfo.dataValues.followerID,
   ))
   .then((userIDs) => models.User.findAll({
-    attributes: ['username'],
+    attributes: ['username', 'id'],
     where: {
       id: userIDs,
     },
-  }))
-  .then((users) => users.map(
-    (user) => user.username,
-  ));
+  }));
 
 // Get list of users following you
 const getFollowers = (userID) => models.UserFollower.findAll({
