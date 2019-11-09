@@ -7,7 +7,8 @@ import AppBar from '@material-ui/core/AppBar';
 import TypoGraphy from '@material-ui/core/Typography';
 import Toolbar from '@material-ui/core/Toolbar';
 import { makeStyles } from '@material-ui/core/styles';
-import Link from '@material-ui/core/Link';
+// import Link from '@material-ui/core/Link';
+import { Link } from 'react-router-dom';
 
 // This allows custom styling of the links, over-riding the root theme
 const useStyles = makeStyles((theme) => ({
@@ -27,15 +28,17 @@ const NavBar = () => {
             Welcome!
           </TypoGraphy>
           <TypoGraphy>
-            <Link href="./App.jsx" className={classes.link}>
+            <Link to="/suggestion" className={classes.link}>
               Explore Books
             </Link>
-            <Link href="./BookListView.jsx" className={classes.link}>
+            <Link to="/toread" className={classes.link}>
               To-Read
             </Link>
-            <Link href="/auth/logout" className={classes.link}>
-              Logout
+            <Link to="/following" className={classes.link}>
+              Following
             </Link>
+            {/* This directs to passport auth logout */}
+            <a href="/auth/logout" className={classes.link}>Logout</a>
           </TypoGraphy>
         </Toolbar>
       </AppBar>

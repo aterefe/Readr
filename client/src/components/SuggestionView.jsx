@@ -6,6 +6,7 @@
 import React from 'react';
 import { Typography } from '@material-ui/core';
 import SuggestionButtons from './SuggestionButtons.jsx';
+import testBook from './TestBook';
 
 
 class SuggestionView extends React.Component {
@@ -13,12 +14,20 @@ class SuggestionView extends React.Component {
     super(props);
     this.state = {
       // this inherits the first book suggestion from the first app load and gets reset with each click
-      bookSuggestion: props.bookSuggestion,
+      bookSuggestion: testBook,
     };
     this.handleYesClick = this.handleYesClick.bind(this);
     this.handleNoClick = this.handleNoClick.bind(this);
     this.handleReadNowClick = this.handleReadNowClick.bind(this);
-    this.getBookSuggestion = props.getBookSuggestion;
+  }
+
+  getBookSuggestion() {
+    // return axios.get('/book').then((retrievedBook) => {
+    //   return retrievedBook;
+    // });
+
+    const { bookSuggestion } = this.state;
+    return bookSuggestion;
   }
 
   // allows more DRY code by not having this repeat inside the handleClicks

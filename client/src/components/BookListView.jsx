@@ -7,7 +7,7 @@ import React from 'react';
 
 function BookListView() {
   return (
-    <div />
+    <div>BOOK LIST VIEW</div>
   );
 }
 
