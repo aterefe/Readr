@@ -27,6 +27,14 @@ const db = new Sequelize({
 const User = db.define('user', {
   username: Sequelize.STRING,
   googleId: Sequelize.STRING,
+  createdAt: {
+    type: Sequelize.DATE,
+    defaultValue: db.fn('NOW'),
+  },
+  updatedAt: {
+    type: Sequelize.DATE,
+    defaultValue: db.fn('NOW'),
+  },
 });
 
 // creating the table for the books api informations
@@ -52,6 +60,14 @@ const Book = db.define('book', {
     type: Sequelize.STRING,
     unique: true,
   },
+  createdAt: {
+    type: Sequelize.DATE,
+    defaultValue: db.fn('NOW'),
+  },
+  updatedAt: {
+    type: Sequelize.DATE,
+    defaultValue: db.fn('NOW'),
+  },
 });
 
 // creating the field on the table
@@ -62,11 +78,27 @@ const UserFollower = db.define('user_follower', {
   followerID: {
     type: Sequelize.INTEGER,
   },
+  createdAt: {
+    type: Sequelize.DATE,
+    defaultValue: db.fn('NOW'),
+  },
+  updatedAt: {
+    type: Sequelize.DATE,
+    defaultValue: db.fn('NOW'),
+  },
 });
 
 const UserBlocked = db.define('user_blocked', {
   userID: Sequelize.INTEGER, // User ID
   blockedID: Sequelize.INTEGER, // ID of user blocked by User ID
+  createdAt: {
+    type: Sequelize.DATE,
+    defaultValue: db.fn('NOW'),
+  },
+  updatedAt: {
+    type: Sequelize.DATE,
+    defaultValue: db.fn('NOW'),
+  },
 });
 
 
@@ -79,6 +111,14 @@ const UserBook = db.define('user_book', {
     type: Sequelize.STRING,
   },
   is_interested: Sequelize.BOOLEAN,
+  createdAt: {
+    type: Sequelize.DATE,
+    defaultValue: db.fn('NOW'),
+  },
+  updatedAt: {
+    type: Sequelize.DATE,
+    defaultValue: db.fn('NOW'),
+  },
 });
 
 const UserPreference = db.define('user_preference', {
@@ -86,7 +126,15 @@ const UserPreference = db.define('user_preference', {
   comedy: Sequelize.FLOAT,
   thriller: Sequelize.FLOAT,
   fantasy: Sequelize.FLOAT,
-  romance: Sequelize.FLOAT,
+  romance: Sequelize.FLOAT, 
+  createdAt: {
+    type: Sequelize.DATE,
+    defaultValue: db.fn('NOW'),
+  },
+  updatedAt: {
+    type: Sequelize.DATE,
+    defaultValue: db.fn('NOW'),
+  },
 });
 
 db.sync({ force: true }).then(() => {
