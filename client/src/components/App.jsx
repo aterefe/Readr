@@ -1,6 +1,7 @@
 import React from 'react';
 import axios from 'axios';
 import { Container, Typography } from '@material-ui/core';
+import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 import { Route, Switch } from 'react-router-dom';
 import Login from './Login.jsx';
 import NavBar from './NavBar.jsx';
@@ -10,6 +11,17 @@ import ReaderView from './ReaderView.jsx';
 import Following from './FollowingView.jsx';
 import Landing from './Landing.jsx';
 
+const theme = createMuiTheme({
+  palette: {
+    primary: { main: '#ff4400' },
+    secondary: {
+      light: '#0066ff',
+      main: '#0044ff',
+      // dark: will be calculated from palette.secondary.main,
+      contrastText: '#ffcc00',
+    },
+  },
+});
 
 class App extends React.Component {
   constructor(props) {
@@ -17,7 +29,6 @@ class App extends React.Component {
     this.state = {
       isLoggedIn: false,
       user: null,
-      userBookList: null,
     };
   }
 
@@ -30,7 +41,7 @@ class App extends React.Component {
 
   componentDidMount() {
     axios.get('/auth/user').then((response) => {
-      console.log(response.data);
+      // console.log(response.data);
       if (response.data.user) {
         console.log('THERE IS A USER');
         this.setState({
@@ -48,44 +59,45 @@ class App extends React.Component {
 
   render() {
     const { isLoggedIn, user, userBookList } = this.state;
-    // const { getBookSuggestion } = this.props;
     return (
-      <div className="App">
-        {/* this container centers content on the page. Width is inherited by the rest of app. */}
-        <Container component="main" maxWidth="sm">
-          <br />
-          <Typography variant="h2" align="center"> Readr </Typography>
-          <br />
-          <br />
-          <div>
-            {isLoggedIn === false ? (<Login />) : null }
-          </div>
-          {/* conditional rendering of the components based on if the user is logged in */}
-          {isLoggedIn ? (
+      <MuiThemeProvider theme={theme}>
+        <div className="App">
+          {/* this container centers content on the page. Width is inherited by the rest of app. */}
+          <Container component="main" maxWidth="sm">
+            <br />
+            <Typography variant="h2" align="center"> Readr </Typography>
+            <br />
+            <br />
             <div>
-              <header>
-                <NavBar user={user} />
-              </header>
-              <br />
-              <Switch>
-                {/* // this is our default route */}
-                <Route exact path="/" component={Landing} />
-                <Route
-                  exact
-                  path="/suggestion"
-                  render={(props) => (
-                    <SuggestionView {...props} user={user} />)}
-                />
-                <Route exact path="/following" component={Following} />
-                {/* HOW TO PASS PROPS IN REACT ROUTE v4. ESLINT DISLIKES IT */}
-                <Route exact path="/toread" render={(props) => <BookListView {...props} userBookList={userBookList} />} />
-                <Route exact path="/readnow" component={ReaderView} />
-                {/* // if noroute exists */}
-              </Switch>
+              {isLoggedIn === false ? (<Login />) : null }
             </div>
-          ) : null }
-        </Container>
-      </div>
+            {/* conditional rendering of the components based on if the user is logged in */}
+            {isLoggedIn ? (
+              <div>
+                <header>
+                  <NavBar user={user} />
+                </header>
+                <br />
+                <Switch>
+                  {/* // this is our default route */}
+                  <Route exact path="/" component={Landing} />
+                  <Route
+                    exact
+                    path="/suggestion"
+                    render={(props) => (
+                      <SuggestionView {...props} user={user} />)}
+                  />
+                  <Route exact path="/following" component={Following} />
+                  {/* HOW TO PASS PROPS IN REACT ROUTE v4. ESLINT DISLIKES IT */}
+                  <Route exact path="/toread" render={(props) => <BookListView {...props} user={user} />} />
+                  <Route exact path="/readnow" component={ReaderView} />
+                  {/* // if noroute exists */}
+                </Switch>
+              </div>
+            ) : null }
+          </Container>
+        </div>
+      </MuiThemeProvider>
     );
   }
 }
