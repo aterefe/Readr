@@ -4,6 +4,7 @@ const passport = require('passport');
 const GoogleStrategy = require('passport-google-oauth20');
 require('dotenv').config();
 const { User } = require('../sequelize/index');
+const dbHelpers = require('../sequelize/db-helpers');
 
 // get information from user to create cookie to send to browser
 passport.serializeUser((user, next) => {
@@ -48,6 +49,7 @@ passport.use(
             googleId: profile.id,
           })
             .then((newUser) => {
+              dbHelpers.createPreferences(newUser.dataValues.id);
               next(null, newUser);
             });
         }

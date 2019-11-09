@@ -58,18 +58,9 @@ const Book = db.define('book', {
 const UserFollower = db.define('user_follower', {
   userID: {
     type: Sequelize.INTEGER,
-    // `references: {
-    //   model: 'user',
-    //   key: 'id',
-    // },`
-    primaryKey: true,
   },
   followerID: {
     type: Sequelize.INTEGER,
-    // references: {
-    //   model: 'user',
-    //   key: 'id',
-    // },
   },
 });
 
@@ -83,19 +74,9 @@ const UserBlocked = db.define('user_blocked', {
 const UserBook = db.define('user_book', {
   userID: {
     type: Sequelize.INTEGER,
-    // references: {
-    //   model: 'user',
-    //   key: 'id',
-    // },
-    primaryKey: true,
   },
   isbn: {
-    type: Sequelize.INTEGER,
-    // references: {
-    //   model: 'books',
-    //   key: 'isbn',
-    // },
-    unique: true,
+    type: Sequelize.STRING,
   },
   is_interested: Sequelize.BOOLEAN,
 });
@@ -106,7 +87,7 @@ const UserPreference = db.define('user_preference', {
   thriller: Sequelize.FLOAT,
   fantasy: Sequelize.FLOAT,
   romance: Sequelize.FLOAT,
-})
+});
 
 db.sync({ force: true }).then(() => {
   console.log('connected to database');
