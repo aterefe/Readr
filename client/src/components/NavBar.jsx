@@ -18,14 +18,16 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const NavBar = () => {
+const NavBar = (props) => {
   const classes = useStyles();
+  const { username } = props.user;
+  const firstName = username.split(' ')[0];
   return (
     <div>
       <AppBar color="primary" position="static">
         <Toolbar>
           <TypoGraphy variant="h6" style={{ flex: 1 }}>
-            Welcome!
+            Welcome <TypoGraphy variant="subtitle1">{firstName}</TypoGraphy>
           </TypoGraphy>
           <TypoGraphy>
             <Link to="/suggestion" className={classes.link}>

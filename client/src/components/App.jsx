@@ -53,6 +53,7 @@ class App extends React.Component {
   render() {
     const { bookSuggestion } = this.state;
     const { isLoggedIn } = this.state;
+    const { user } = this.state;
     return (
       <div className="App">
         {/* this container centers content on the page. Width is inherited by the rest of app. */}
@@ -66,7 +67,7 @@ class App extends React.Component {
           {isLoggedIn ? (
             <div>
               <header>
-                <NavBar />
+                <NavBar user={user} />
               </header>
               <br />
               <Switch>
