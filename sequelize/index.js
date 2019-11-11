@@ -52,22 +52,11 @@ const Book = db.define('book', {
     type: Sequelize.STRING,
     unique: true,
   },
-  cover: {
+  coverURL: {
     type: Sequelize.STRING,
     unique: true,
   },
-  url: {
-    type: Sequelize.STRING,
-    unique: true,
-  },
-  createdAt: {
-    type: Sequelize.DATE,
-    defaultValue: db.fn('NOW'),
-  },
-  updatedAt: {
-    type: Sequelize.DATE,
-    defaultValue: db.fn('NOW'),
-  },
+  genre: Sequelize.STRING,
 });
 
 // creating the field on the table

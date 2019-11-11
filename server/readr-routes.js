@@ -19,21 +19,20 @@ const authCheck = (req, res, next) => {
 };
 
 router.get('/', authCheck, (req, res) => {
-  console.log(req.user.id);
+  // console.log(req.user.id);
   res.send(`you are logged in as: ${req.user.username}`);
 });
 
 router.get('/suggestion', (req, res) => {
   const { user } = req;
-  // TODO: Get users personalized data as userPref
-  // Select random category from user's personalized data
-  const userPref = { comedy: 0.74, romance: 0.54, thriller: 0.21 }; // FIXME: temp data
-  const category = selectCategory(userPref);
   const book = {};
-
-  // Send search to that category
-  categorySearch(category, 0)
-    .then((books) => categorySearch(category, selectBook(books.ebook_count)))
+  dbHelpers.getPreferences(user.id)
+    .then((preferences) => {
+      const category = selectCategory(preferences.dataValues);
+      book.genre = category;
+      return categorySearch(category, 0);
+    })
+    .then((books) => categorySearch(book.genre, selectBook(books.ebook_count)))
     // Get total book count & Send request with offset set to a random number from the count
     .then((books) => {
       book.title = books.works[0].title;
@@ -49,7 +48,11 @@ router.get('/suggestion', (req, res) => {
       return dbHelpers.insertBook(book);
       // res.send(JSON.stringify(book));
     })
-    .then(() => res.send(JSON.stringify(book)));
+    .then(() => res.send(JSON.stringify(book)))
+    .catch((err) => {
+      console.error(err);
+      res.end();
+    });
 });
 
 // Endpoint to return list of followers
@@ -91,16 +94,31 @@ router.post('/unfollow/:followerID', (req, res) => {
 router.post('/interest', (req, res) => {
   const { userID, isbn, toRead } = req.body;
   dbHelpers.createUserBook(userID, isbn, toRead)
+    .then(() => dbHelpers.findBook(isbn))
+    .then((bookData) => dbHelpers.updatePreferences(userID, bookData.genre, toRead))
     .then(() => {
       res.status(200).send('book added to user list');
     })
     .catch((error) => console.log(error));
 });
 
-router.get('/booklist', (req, res) => {
+router.patch('/interest', (req, res) => {
+  const { userID, isbn, toUpdate } = req.body;
+  dbHelpers.changeUserInterest(userID, isbn, toUpdate)
+    .then(() => dbHelpers.findBook(isbn))
+    .then((bookData) => dbHelpers.updatePreferences(userID, bookData.genre, toUpdate))
+    .then(() => {
+      res.status(200).send('book list updated');
+    })
+    .catch((error) => console.log(error));
+});
+
+router.post('/booklist', (req, res) => {
   const { userID, toRead } = req.body;
   dbHelpers.userBookList(userID, toRead)
-    .then((bookList) => res.send(bookList))
+    .then((bookList) => {
+      res.send(bookList);
+    })
     .catch((error) => console.log(error));
 });
 module.exports = router;

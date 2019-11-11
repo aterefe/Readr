@@ -21,9 +21,9 @@ function SuggestionButtons(props) {
         Interested
         </Button>
       </div>
-      <Button type="submit" variant="contained" fullWidth color="inherit" className={classes.button} onClick={() => props.handleReadNowClick()}>
+      {/* <Button type="submit" variant="contained" fullWidth color="inherit" className={classes.button} onClick={() => props.handleReadNowClick()}>
         Read Now
-      </Button>
+      </Button> */}
     </div>
   );
 }

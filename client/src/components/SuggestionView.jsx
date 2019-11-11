@@ -26,7 +26,7 @@ class SuggestionView extends React.Component {
     this.postUserInterest = this.postUserInterest.bind(this);
     this.handleYesClick = this.handleYesClick.bind(this);
     this.handleNoClick = this.handleNoClick.bind(this);
-    this.handleReadNowClick = this.handleReadNowClick.bind(this);
+    // this.handleReadNowClick = this.handleReadNowClick.bind(this);
   }
 
   componentDidMount() {
@@ -36,7 +36,12 @@ class SuggestionView extends React.Component {
   // Request to server to get a new book suggestion
   getBookSuggestion() {
     return axios.get('/readr/suggestion').then((retrievedBook) => {
-      this.setState({ bookSuggestion: retrievedBook.data });
+      // a conditinal is here becuase some books were returning empty data, so we want to retry
+      if (retrievedBook.data === '') {
+        this.getBookSuggestion();
+      } else {
+        this.setState({ bookSuggestion: retrievedBook.data });
+      }
     });
   }
 
@@ -70,16 +75,17 @@ class SuggestionView extends React.Component {
     this.getBookSuggestion();
   }
 
-  handleReadNowClick() {
-    console.log('Clicked Read Now!');
-    // sends users to a view or link to openURL
-    // *************************** FIX ME
-  }
+  // handleReadNowClick() {
+  //   console.log('Clicked Read Now!');
+  //   // sends users to a view or link to openURL
+  //   // *************************** FIX ME
+  // }
 
   render() {
     const { bookSuggestion } = this.state;
     return (
       <div>
+        {/* Spinner until component mounts and sets state */}
         {bookSuggestion === null ? (
           <div
             style={{
@@ -111,7 +117,7 @@ class SuggestionView extends React.Component {
               <SuggestionButtons
                 handleNoClick={this.handleNoClick}
                 handleYesClick={this.handleYesClick}
-                handleReadNowClick={this.handleReadNowClick}
+                // handleReadNowClick={this.handleReadNowClick}
               />
             </div>
           </div>

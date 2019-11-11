@@ -11,11 +11,6 @@ import {
   Button,
 } from '@material-ui/core';
 import { Link } from 'react-router-dom';
-import SuggestionView from './SuggestionView.jsx';
-import BookListView from './BookListView.jsx';
-import ReaderView from './ReaderView.jsx';
-import Following from './FollowingView.jsx';
-import Landing from './Landing.jsx';
 
 // This allows custom styling of the buttons, over-riding the root theme
 const useStyles = makeStyles((theme) => ({
@@ -27,12 +22,15 @@ const useStyles = makeStyles((theme) => ({
 
 const NavBar = (props) => {
   const classes = useStyles();
-  const { username } = props.user;
+  const { username, id } = props.user;
   const firstName = username.split(' ')[0];
   return (
     <div>
-      <Typography variant="button" style={{ flex: 1 }}>
+      <Typography variant="button" style={{ flex: 1, float: 'left' }}>
         Welcome {firstName}!
+      </Typography>
+      <Typography variant="body2" style={{ flex: 1, float: 'right' }}>
+        Your user ID#: {id}
       </Typography>
       <AppBar color="primary" position="static">
         <Toolbar>
@@ -40,7 +38,7 @@ const NavBar = (props) => {
             <Button size="large" component={Link} to="/suggestion" className={classes.button}>
               Explore Books
             </Button>
-            <Button size="large" component={Link} to="/toread" className={classes.button}>
+            <Button size="large" component={Link} to="/booklist" className={classes.button}>
               To-Read
             </Button>
             <Button size="large" component={Link} to="/following" className={classes.button}>

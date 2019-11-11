@@ -8,7 +8,7 @@ import NavBar from './NavBar.jsx';
 import SuggestionView from './SuggestionView.jsx';
 import BookListView from './BookListView.jsx';
 import ReaderView from './ReaderView.jsx';
-import Following from './FollowingView.jsx';
+import FollowingView from './FollowingView.jsx';
 import Landing from './Landing.jsx';
 
 const theme = createMuiTheme({
@@ -87,11 +87,10 @@ class App extends React.Component {
                     render={(props) => (
                       <SuggestionView {...props} user={user} />)}
                   />
-                  <Route exact path="/following" component={Following} />
+                  <Route exact path="/following" component={FollowingView} />
                   {/* HOW TO PASS PROPS IN REACT ROUTE v4. ESLINT DISLIKES IT */}
-                  <Route exact path="/toread" render={(props) => <BookListView {...props} user={user} />} />
+                  <Route exact path="/booklist" render={(props) => <BookListView {...props} user={user} />} />
                   <Route exact path="/readnow" component={ReaderView} />
-                  {/* // if noroute exists */}
                 </Switch>
               </div>
             ) : null }

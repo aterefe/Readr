@@ -5,16 +5,17 @@
 import React from 'react';
 import axios from 'axios';
 import { Typography, CircularProgress } from '@material-ui/core';
+import BookListItem from './BookListItem.jsx';
 
 class BookListView extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       bookList: null,
-      userID: props.user.id,
     };
 
     this.getUserBookList = this.getUserBookList.bind(this);
+    this.handleRemoveClick = this.handleRemoveClick.bind(this);
   }
 
   componentDidMount() {
@@ -23,17 +24,29 @@ class BookListView extends React.Component {
 
   // Request to server to get a new book suggestion
   getUserBookList() {
-    const { userID } = this.state;
-    console.log(userID);
-    return axios.get('/readr/booklist', {
-      userID,
+    const { user } = this.props;
+    return axios.post('/readr/booklist', {
+      userID: user.id,
       toRead: true,
     })
       .then((books) => {
         this.setState({ bookList: books.data });
-      });
+      })
+      .catch((error) => console.log(error));
   }
 
+  handleRemoveClick(isbn, toUpdate) {
+    const { user } = this.props;
+    return axios.patch('/readr/interest', {
+      userID: user.id,
+      isbn,
+      toUpdate,
+    }).then(() => {
+      // reset the state so removed book is not shown
+      this.getUserBookList();
+    })
+      .catch((error) => console.log(error));
+  }
 
   render() {
     const { bookList } = this.state;
@@ -53,8 +66,10 @@ class BookListView extends React.Component {
           </div>
         ) : (
           <div>
-            {/* mapp over each item in book list and display */}
-            {Object.values(bookList)}
+            <Typography variant="button">Your To-Read List:</Typography>
+            {Object.keys(bookList).map((book) => (
+              <BookListItem book={bookList[book]} handleRemoveClick={this.handleRemoveClick} />
+            ))}
           </div>
         )}
       </div>
