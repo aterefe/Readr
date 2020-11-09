@@ -27,18 +27,7 @@ const db = new Sequelize({
 const User = db.define('user', {
   username: Sequelize.STRING,
   googleId: Sequelize.STRING,
-<<<<<<< HEAD
-  createdAt: {
-    type: Sequelize.DATE,
-    defaultValue: db.fn('NOW'),
-  },
-  updatedAt: {
-    type: Sequelize.DATE,
-    defaultValue: db.fn('NOW'),
-  },
-=======
   isQuizzed: Sequelize.BOOLEAN,
->>>>>>> cdb857848d4aea621b9b65ecb578609baeb5c615
 });
 
 // creating the table for the books api informations

@@ -171,39 +171,6 @@ const createUser = (username, googleId) => models.User.create({
   googleId,
 });
 
-<<<<<<< HEAD
-// --- BLOCKED ----
-/*
-Builds a new model instance and calls save on it.
-Blocks a user
-*/
-const blockUser = (userID, blockedID) => models.UserBlocked.create({
-  userID,
-  blockedID,
-});
-
-// Goal for functioun: remove follower if blocked
-/* steps:
-1) Inputs: userID, followerID, blockedID
-2) Output: unfollow blocked user
-*/
-/*
-what the getFollowers return
-[{userID: '34234', username: 'fsgsgfewew'}]
-  getFollowers(userID).forEach((follower) => {
-    if (follower.userID === blockedID) {
-      unfollowUser(userID, blockedID);
-    }
-  });
-*/
-
-// gets a list of all blockeduser
-const BlockedUser = (userID) => models.UserBlocked.findAll({ attributes: ['userID'], userwhere: { blockedID: userID } })
-  .then(removeConnectionData => removeConnectionData.map((connectionInfo) => {
-    unfollowUser(userID, blockedID);
-  }));
-=======
->>>>>>> cdb857848d4aea621b9b65ecb578609baeb5c615
 
 module.exports.insertBook = insertBook;
 module.exports.findBook = findBook;
